@@ -1,7 +1,10 @@
 <?php
-$dsn      = 'mysql:dbname=carepointe;host=127.0.0.1';
-$username = 'root';
-$password = 'password';
+
+
+$dbHost = getenv('DB_HOST') ? getenv('DB_HOST') : '127.0.0.1';
+$dsn = "mysql:dbname=carepointe;host={​​​​$dbHost}​​​​";
+$username = getenv('DB_USERNAME') ? getenv('DB_USERNAME') : 'root';
+$password = getenv('DB_PASSWORD') ? getenv('DB_PASSWORD') : 'password';
 
 // error reporting (this is a demo, after all!)
 ini_set('display_errors',1);

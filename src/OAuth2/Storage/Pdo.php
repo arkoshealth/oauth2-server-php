@@ -442,7 +442,7 @@ class Pdo implements
 //        return MD5($password);
 
         $options = [
-            'cost' => 12,
+            'cost' => 11,
         ];
         return password_hash($password, PASSWORD_BCRYPT, $options);
     }
