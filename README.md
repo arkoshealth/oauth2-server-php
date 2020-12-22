@@ -4,6 +4,7 @@ oauth2-server-php
 ## Pre-Req
 1. install sql tables
    - oauth_tables.sql
+   - keys.sql
 2. set up virtual host
    - apache config
 ```
@@ -27,10 +28,7 @@ oauth2-server-php
    - add oauth.local to /etc/hosts for 127.0.0.1 (local use) 
 4. find your servers (where oauth is going to run cost)
    - find_cost.php
-5. edit Pdo.php to adjust the cost
-   - src/OAuth2/Storage/Pdo.php line 445
-6. database configuration
-   - server.php
+5. copy .env.example to .env and change the values to suit your environment
 
 
 

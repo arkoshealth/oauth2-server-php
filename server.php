@@ -1,10 +1,12 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
-
-$dbHost = getenv('DB_HOST') ? getenv('DB_HOST') : '127.0.0.1';
-$dsn = "mysql:dbname=carepointe;host={​​​​$dbHost}​​​​";
-$username = getenv('DB_USERNAME') ? getenv('DB_USERNAME') : 'root';
-$password = getenv('DB_PASSWORD') ? getenv('DB_PASSWORD') : 'password';
+$dbHost = getenv('DB_HOST');
+$dsn = "mysql:dbname=carepointe;host={$dbHost}";
+$username = getenv('DB_USERNAME');
+$password = getenv('DB_PASSWORD');
 
 // error reporting (this is a demo, after all!)
 ini_set('display_errors',1);

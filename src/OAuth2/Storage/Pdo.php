@@ -438,7 +438,7 @@ class Pdo implements
     protected function hashPassword($password)
     {
         $options = [
-            'cost' => 11,
+            'cost' => getenv('COST'),
         ];
         return password_hash($password, PASSWORD_BCRYPT, $options);
     }
