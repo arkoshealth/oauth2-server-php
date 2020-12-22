@@ -11,8 +11,8 @@ CREATE TABLE oauth_clients (
   PRIMARY KEY (client_id)
 );
 
-INSERT INTO oauth_clients (client_id, client_secret, redirect_uri) 
-  VALUES ("carepointe", "testsecret", "https://carepointe.cloud/");
+INSERT INTO oauth_clients (client_id, client_secret, redirect_uri, grant_types) 
+  VALUES ("carepointe", "testsecret", "https://carepointe.cloud/", 'password');
 
 DROP TABLE IF EXISTS oauth_access_tokens;
 CREATE TABLE oauth_access_tokens (
