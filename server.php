@@ -17,10 +17,6 @@ OAuth2\Autoloader::register();
 // $dsn is the Data Source Name for your database, for exmaple "mysql:dbname=my_oauth2_db;host=localhost"
 $storage = new OAuth2\Storage\Pdo(array('dsn' => $dsn, 'username' => $username, 'password' => $password));
 
-//$result = $storage->checkClientCredentials('testclient', 'testpass');
-//echo $result, PHP_EOL;
-
-
 // Pass a storage object or array of storage objects to the OAuth2 server class
 $server = new OAuth2\Server($storage, array(
     'use_jwt_access_tokens' => true
@@ -35,6 +31,4 @@ $server->addGrantType(new OAuth2\GrantType\AuthorizationCode($storage));
 // Add the "User Credentials" greant type
 $server->addGrantType(new OAuth2\GrantType\UserCredentials($storage));
 
-// send the response
-//$server->handleTokenRequest(OAuth2\Request::createFromGlobals())->send();
 ?>
