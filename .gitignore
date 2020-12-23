@@ -5,3 +5,8 @@ composer.lock
 .idea
 .vscode
 .env
+.htaccess
+php.ini
+error_log
+.user.ini
+.well-known/
