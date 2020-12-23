@@ -24,13 +24,7 @@ $server = new OAuth2\Server($storage, array(
     'use_jwt_access_tokens' => true
 ));
 
-// Add the "Client Credentials" grant type (it is the simplest of the grant types)
-$server->addGrantType(new OAuth2\GrantType\ClientCredentials($storage));
-
-// Add the "Authorization Code" grant type (this is where the oauth magic happens)
-$server->addGrantType(new OAuth2\GrantType\AuthorizationCode($storage));
-
-// Add the "User Credentials" greant type
+// Add the "User Credentials" grant type. Note this is the minimal required grant for Carepointe oauth flow/usage.
 $server->addGrantType(new OAuth2\GrantType\UserCredentials($storage));
 
 ?>
