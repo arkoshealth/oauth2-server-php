@@ -41,7 +41,7 @@ Execute the below  SQL scripts against the Carepointe MySQL database.
 
 **Note: This is required for BOTH carepointe-docker and VM installations.**
 
-   - Locate the `oauth2-server-php/.env.example` file, rename to `.env`
+   - Locate the `oauth2-server-php/.env.example` file, copy to a new file named `.env`
    - Update the database values accordingly
    - Copy the `oauth2-server-php/find_cost.php` to the installation directory of Carepointe.
         - **Note: For carepointe-docker installations you will need to bash into the running container:**
@@ -50,6 +50,7 @@ Execute the below  SQL scripts against the Carepointe MySQL database.
    
    - Run `php find_cost.php`
    - Update the `COST` variable in the `.env` to match the output of the `find_cost.php` script output (default is 11)
+        - this value will need to be updated in the carepointe .ini settings file as well (they must match)
 
 ####OAuth Server Complete Documentation
 
