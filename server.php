@@ -4,7 +4,8 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 $dbHost = getenv('DB_HOST');
-$dsn = "mysql:dbname=carepointe;host={$dbHost}";
+$dbName = getenv('DB_NAME');
+$dsn = "mysql:dbname=$dbName;host={$dbHost}";
 $username = getenv('DB_USERNAME');
 $password = getenv('DB_PASSWORD');
 
