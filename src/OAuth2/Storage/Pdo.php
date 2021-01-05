@@ -76,7 +76,9 @@ class Pdo implements
             'access_token_table' => 'oauth_access_tokens',
             'refresh_token_table' => 'oauth_refresh_tokens',
             'code_table' => 'oauth_authorization_codes',
-            'user_table' => 'oauth_users',
+            'user_table' => 'tbl_users',
+            'patient_table' => 'tbl_patient',
+            'account_table' => 'tbl_patient_account',
             'jwt_table'  => 'oauth_jwt',
             'jti_table'  => 'oauth_jti',
             'scope_table'  => 'oauth_scopes',
@@ -431,7 +433,7 @@ class Pdo implements
      */
     protected function checkPassword($user, $password)
     {
-        return password_verify($password, $user['password']);
+        return password_verify($password, $user['Password']);
     }
 
     // use a secure hashing algorithm when storing passwords. Override this for your application
@@ -449,7 +451,25 @@ class Pdo implements
      */
     public function getUser($username)
     {
-        $stmt = $this->db->prepare($sql = sprintf('SELECT * from %s where username=:username', $this->config['user_table']));
+        $query = 'SELECT UserName AS UserName, Password AS Password,' .
+            '     FirstName AS FirstName, LastName AS LastName,' .
+            '     EmailID1 AS email, email_verified AS email_verified,' .
+            '     scope AS scope FROM %1$s WHERE UserName = :username' .
+            ' UNION' .
+            ' SELECT patientAccount.email AS UserName, patientAccount.password AS Password,' .
+            '     patient.FirstName AS FirstName, patient.LastName AS LastName,' .
+            '     patient.EmailID AS email, patient.email_verified AS email_verified,' .
+            '     patientAccount.scope as scope' .
+            ' FROM %2$s AS patient, %3$s AS patientAccount' .
+            ' WHERE patient.patient_ID = patientAccount.patient_id AND patientAccount.email = :username';
+        $stmt = $this->db->prepare(
+            sprintf(
+                $query,
+                $this->config['user_table'],
+                $this->config['patient_table'],
+                $this->config['account_table']
+            )
+        );
         $stmt->execute(array('username' => $username));
 
         if (!$userInfo = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -478,9 +498,9 @@ class Pdo implements
 
         // if it exists, update it.
         if ($this->getUser($username)) {
-            $stmt = $this->db->prepare($sql = sprintf('UPDATE %s SET password=:password, first_name=:firstName, last_name=:lastName where username=:username', $this->config['user_table']));
+            $stmt = $this->db->prepare($sql = sprintf('UPDATE %s SET password=:password, FirstName=:firstName, LastName=:lastName where UserName=:username', $this->config['user_table']));
         } else {
-            $stmt = $this->db->prepare(sprintf('INSERT INTO %s (username, password, first_name, last_name) VALUES (:username, :password, :firstName, :lastName)', $this->config['user_table']));
+            $stmt = $this->db->prepare(sprintf('INSERT INTO %s (UserName, Password, FirstName, LastName) VALUES (:username, :password, :firstName, :lastName)', $this->config['user_table']));
         }
 
         return $stmt->execute(compact('username', 'password', 'firstName', 'lastName'));
