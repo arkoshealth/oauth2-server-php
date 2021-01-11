@@ -64,29 +64,6 @@ alter table tbl_users add column email_verified tinyint(1) DEFAULT NULL, add col
 alter table tbl_patient add column email_verified tinyint(1) DEFAULT NULL;
 alter table tbl_patient_account add column scope varchar(4000) DEFAULT NULL;
 
-CREATE OR REPLACE VIEW oauth_users AS 
-  select tbl_users.UserName AS username, tbl_users.Password AS password,
-         tbl_users.FirstName AS first_name, tbl_users.LastName AS last_name,
-         tbl_users.EmailID1 AS email, tbl_users.email_verified AS email_verified,
-         tbl_users.scope AS scope from tbl_users
-   UNION      
-  select patientAccount.email as username, patientAccount.password as password,
-         patient.FirstName as first_name, patient.LastName as last_name,
-         patient.EmailID as email, patient.email_verified as email_verified,
-         patientAccount.scope as scope
-  from   tbl_patient as patient, tbl_patient_account as patientAccount
-  Where  patient.patient_ID = patientAccount.patient_id;
-
-CREATE OR REPLACE VIEW oauth_users_password_history AS
-  select tbl_users_password_history.id as id, tbl_users_password_history.unique_user_identifer as unique_user_identifer,
-         tbl_users_password_history.user_id as user_id, tbl_users_password_history.password as password,
-         tbl_users_password_history.created_at as created_at from tbl_users_password_history
-   UNION
-  select tbl_patient_password_history.id as id, tbl_patient_password_history.patient_id as user_id,
-         tbl_patient_password_history.password as password, tbl_patient_password_history.created_at as created_at,
-         tbl_patient_password_history.patient_id as unique_user_identifer from tbl_patient_password_history;
-  
-
 DROP TABLE IF EXISTS oauth_public_keys;
 CREATE TABLE oauth_public_keys (
   client_id VARCHAR(80), 
