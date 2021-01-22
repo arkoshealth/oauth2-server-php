@@ -10,3 +10,6 @@ php.ini
 error_log
 .user.ini
 .well-known/
+.DS_Store
+src/.DS_Store
+src/OAuth2/.DS_Store
