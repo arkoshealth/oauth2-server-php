@@ -455,13 +455,15 @@ class Pdo implements
             '     FirstName AS FirstName, LastName AS LastName,' .
             '     EmailID1 AS email, email_verified AS email_verified,' .
             '     scope AS scope FROM %1$s WHERE UserName = :username' .
+            '     AND  isActive = "Y" AND is_deleted = "N" ' .
             ' UNION' .
             ' SELECT patientAccount.email AS UserName, patientAccount.password AS Password,' .
             '     patient.FirstName AS FirstName, patient.LastName AS LastName,' .
             '     patient.EmailID AS email, patient.email_verified AS email_verified,' .
             '     patientAccount.scope as scope' .
             ' FROM %2$s AS patient, %3$s AS patientAccount' .
-            ' WHERE patient.patient_ID = patientAccount.patient_id AND patientAccount.email = :username';
+            ' WHERE patientAccount.is_active = "Y" AND patientAccount.is_deleted = "N" AND ' .
+            ' patient.patient_ID = patientAccount.patient_id AND patientAccount.email = :username';
         $stmt = $this->db->prepare(
             sprintf(
                 $query,
