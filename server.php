@@ -22,7 +22,8 @@ $storage = new OAuth2\Storage\Pdo(array('dsn' => $dsn, 'username' => $username, 
 
 // Pass a storage object or array of storage objects to the OAuth2 server class
 $server = new OAuth2\Server($storage, array(
-    'use_jwt_access_tokens' => true
+    'use_jwt_access_tokens' => true,
+    'issuer' => getenv('ISSUER')
 ));
 
 // Add the "User Credentials" grant type. Note this is the minimal required grant for Carepointe oauth flow/usage.
