@@ -32,10 +32,16 @@ Execute the below  SQL scripts against the Carepointe MySQL database.
            Require all granted
            Allow from all
         </Directory>
+        SetEnv ENC_KEY ${ENC_KEY}
 </VirtualHost>   
 ```
 - Setup DNS
    - add oauth.local to `/etc/hosts` for 127.0.0.1 (local use)
+- Put key into Apache env
+   - from Carepointe-docker repo get addl-settings and envvars (in docker directory)
+   - put addl-settings in /tmp
+   - run `cat /path/to/envvars >> /etc/apache2/envvars` after that envvars file is no longer needed
+   - restart apache  
     
 ####3. Configure .env File
 
@@ -43,6 +49,23 @@ Execute the below  SQL scripts against the Carepointe MySQL database.
 
    - Locate the `oauth2-server-php/.env.example` file, copy to a new file named `.env`
    - Update the database values accordingly
+        - **Note: Passwords and other secrets should be encrypted with php-encryption sample code:
+```php
+<?php
+$_SERVER['DOCUMENT_ROOT'] = '/var/www/html';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+
+$keyContents = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/path/to/key');
+$key = \Defuse\Crypto\Key::loadFromAsciiSafeString($keyContents);
+
+$secret = 'secret';
+
+$ciphertext = \Defuse\Crypto\Crypto::encrypt($secret, $key);
+
+echo 'secret: ' . $ciphertext . PHP_EOL;
+
+?>
+```
    - Copy the `oauth2-server-php/find_cost.php` to the installation directory of Carepointe.
         - **Note: For carepointe-docker installations you will need to bash into the running container:**
         

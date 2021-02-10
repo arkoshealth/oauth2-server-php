@@ -1,17 +1,19 @@
 <?php
+// error reporting (this is a demo, after all!)
+ini_set('display_errors',1);
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
+
+$key = \Defuse\Crypto\Key::loadFromAsciiSafeString(getenv(getenv('KEY_NAME')));
 
 $dbHost = getenv('DB_HOST');
 $dbName = getenv('DB_NAME');
 $dsn = "mysql:dbname=$dbName;host={$dbHost}";
 $username = getenv('DB_USERNAME');
-$password = getenv('DB_PASSWORD');
-
-// error reporting (this is a demo, after all!)
-ini_set('display_errors',1);
-error_reporting(E_ALL);
+$password = \Defuse\Crypto\Crypto::decrypt(getenv('DB_PASSWORD'), $key);
 
 // Autoloading (composer is preferred, but for this example let's just do this)
 require_once('src/OAuth2/Autoloader.php');
