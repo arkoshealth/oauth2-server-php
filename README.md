@@ -5,9 +5,9 @@ oauth2-server-php
 
 ####1. Database Updates
 
-Execute the below  SQL scripts against the Carepointe MySQL database.
+Execute the below SQL scripts against the Carepointe MySQL database.
 
-**Note: This is required for BOTH carepointe-docker and VM installations.**
+**Note: Manually executing oauth_tables.sql is only needed for VM installations. Both Docker and VM installations need to have keys.sql manually executed.**
 
    - `oauth2-server-php/oauth_tables.sql`
    - `keys.sql` *(shared outside of source control for security)*
@@ -46,7 +46,7 @@ Execute the below  SQL scripts against the Carepointe MySQL database.
    - Copy the `oauth2-server-php/find_cost.php` to the installation directory of Carepointe.
         - **Note: For carepointe-docker installations you will need to bash into the running container:**
         
-            `docker exec -it arkos-docker_carepointe_1 bash`
+            `docker exec -it carepointe-docker_carepointe_1 bash`
    
    - Run `php find_cost.php`
    - Update the `COST` variable in the `.env` to match the output of the `find_cost.php` script output (default is 11)
