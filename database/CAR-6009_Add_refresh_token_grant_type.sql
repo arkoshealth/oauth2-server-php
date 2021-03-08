@@ -6,6 +6,6 @@
         Table(s)-   oauth_clients
 */
 
-UPDATE `carepointe`.`oauth_clients`
+UPDATE `oauth_clients`
 SET `grant_types` = 'password refresh_token'
 WHERE `client_id` = 'carepointe';
