@@ -621,6 +621,20 @@ class Pdo implements
 
     /**
      * @param mixed $client_id
+     * @param string $public_key
+     * @param string $private_key
+     * @param string $encryption_algorithm
+     * @return bool
+     */
+    public function setClientKeys($client_id, $public_key, $private_key, $encryption_algorithm)
+    {
+        $stmt = $this->db->prepare(sprintf('INSERT INTO %s (client_id, public_key, private_key, encryption_algorithm) VALUES (:client_id, :public_key, :private_key, :encryption_algorithm)', $this->config['public_key_table']));
+
+        return $stmt->execute(compact('client_id', 'public_key', 'private_key', 'encryption_algorithm'));
+    }
+
+    /**
+     * @param mixed $client_id
      * @return mixed
      */
     public function getPublicKey($client_id = null)

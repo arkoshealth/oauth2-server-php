@@ -58,4 +58,6 @@ $server = new OAuth2\Server($storage, array(
 $server->addGrantType(new OAuth2\GrantType\UserCredentials($storage));
 // Add the "Refresh Token" grant type. This allows us to issue a new access token using the Refresh token.
 $server->addGrantType(new OAuth2\GrantType\RefreshToken($storage, array('always_issue_new_refresh_token' => true)));
+// Add "Client Credentials" grant type
+$server->addGrantType(new OAuth2\GrantType\ClientCredentials($storage, array('allow_credentials_in_request_body' => false)));
 ?>
