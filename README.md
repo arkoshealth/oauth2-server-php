@@ -75,6 +75,23 @@ echo 'secret: ' . $ciphertext . PHP_EOL;
    - Update the `COST` variable in the `.env` to match the output of the `find_cost.php` script output (default is 11)
         - this value will need to be updated in the carepointe .ini settings file as well (they must match)
 
+####4. Create new clients (Client Credentials)
+
+**Note:**
+    Inside the container of Oauth2-server-php project:
+- Locate the root folder `/oauth2-server-php>`
+- Run the script:
+    - `php scripts/create_clientCredentials.php client_id="MyClient" client_secret="MySecret" public_key="-----BEGIN PUBLIC KEY-----..." private_key="-----BEGIN RSA PRIVATE KEY-----..."`
+- Can add additional params:
+    - `redirect_uri`, `scope`, `user_id`, `encryption_algorithm`
+- Should return:
+  - `MyClient created successfully`
+- For testing use the following cURL code:
+    - `curl -u MyClient:MySecret http://oauth.local/token.php -d 'grant_type=client_credentials'`
+
+- The response should be:
+    - `{"access_token":"JWT_TOKEN", "expires_in":false, "token_type":"bearer", "scope":null}`
+
 ####OAuth Server Complete Documentation
 
 [https://bshaffer.github.io/oauth2-server-php-docs/]()
