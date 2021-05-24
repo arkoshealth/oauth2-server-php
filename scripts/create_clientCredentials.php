@@ -69,7 +69,7 @@ $username = getenv('DB_USERNAME');
 $password = \Defuse\Crypto\Crypto::decrypt(getenv('DB_PASSWORD'), $key);
 
 // Autoloading (composer is preferred, but for this example let's just do this)
-require_once('src/OAuth2/Autoloader.php');
+require_once('../src/OAuth2/Autoloader.php');
 OAuth2\Autoloader::register();
 
 try {
