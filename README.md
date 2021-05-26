@@ -1,23 +1,34 @@
 oauth2-server-php
-=================
+===
 
-### Carepointe  OAuth Server Setup Pre-Requsites
+Carepointe  OAuth Server Setup Pre-Requsites. Please follow the steps in the order provided
 
-####1. Database Updates
+<br />
+
+## Table of Contents
+| Step | Description |
+|---|---|
+|[Database Updates](#-Database-Updates)|Update the database|
+|[Virtual Host Updates](#-Virtual-Host-Updates)| VM Virtual host setup |
+|[Setup DNS](#-Setup-DNS)| Set up steps for DNS configurations |
+|[Configure .env File](#-Configure-.env-File)|Set up .env and update database values |
+|[Additional Information](#-Additional-Information)| Link(s) to additional information |
+---
+
+## Database Updates
 
 Execute the below  SQL scripts against the Carepointe MySQL database.
 
-**Note: This is required for BOTH carepointe-docker and VM installations.**
-
-   - `oauth2-server-php/oauth_tables.sql`
-   - `keys.sql` *(shared outside of source control for security)*
+> **Note: This is required for BOTH carepointe-docker and VM installations.**
+>   - [`oauth2-server-php/oauth_tables.sql`](./oauth_tables.sql)
+>   - `keys.sql` *(shared outside of source control for security)*
    
-####2. Virtual Host Updates  
+## Virtual Host Updates  
    
-**Note: This is applicable ONLY for VM installations, NOT docker-carepointe.**
+> **Note: This is applicable ONLY for VM installations, NOT docker-carepointe.**
 
-   - Update the apache configuration as shown below:
-```
+Update the apache configuration as shown below:
+```apache
 <VirtualHost *:80>
         ServerAdmin webmaster@localhost
         ServerName oauth.local
@@ -35,46 +46,56 @@ Execute the below  SQL scripts against the Carepointe MySQL database.
         SetEnv ENC_KEY ${ENC_KEY}
 </VirtualHost>   
 ```
-- Setup DNS
-   - add oauth.local to `/etc/hosts` for 127.0.0.1 (local use)
-- Put key into Apache env
+
+## Setup DNS
+
+Follow the below to set up DNS
+
+1. add oauth.local to `/etc/hosts` for 127.0.0.1 (local use)
+1. Put key into Apache env
    - from Carepointe-docker repo get addl-settings and envvars (in docker directory)
    - put addl-settings in /tmp
    - run `cat /path/to/envvars >> /etc/apache2/envvars` after that envvars file is no longer needed
    - restart apache  
     
-####3. Configure .env File
+## Configure .env File
 
-**Note: This is required for BOTH carepointe-docker and VM installations.**
+> **Note: This is required for BOTH carepointe-docker and VM installations.**
 
-   - Locate the `oauth2-server-php/.env.example` file, copy to a new file named `.env`
-   - Update the database values accordingly
-        - **Note: Passwords and other secrets should be encrypted with php-encryption sample code:
-```php
-<?php
-$_SERVER['DOCUMENT_ROOT'] = '/var/www/html';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+1. Locate the `oauth2-server-php/.env.example` file, copy to a new file named `.env`
+1. Update the database values accordingly
 
-$keyContents = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/path/to/key');
-$key = \Defuse\Crypto\Key::loadFromAsciiSafeString($keyContents);
+   > **Note: Passwords and other secrets should be encrypted with php-encryption sample code:
 
-$secret = 'secret';
+   ```php
+   <?php
+   $_SERVER['DOCUMENT_ROOT'] = '/var/www/html';
+   require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
 
-$ciphertext = \Defuse\Crypto\Crypto::encrypt($secret, $key);
+   $keyContents = file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/path/to/key');
+   $key = \Defuse\Crypto\Key::loadFromAsciiSafeString($keyContents);
 
-echo 'secret: ' . $ciphertext . PHP_EOL;
+   $secret = 'secret';
 
-?>
-```
-   - Copy the `oauth2-server-php/find_cost.php` to the installation directory of Carepointe.
-        - **Note: For carepointe-docker installations you will need to bash into the running container:**
+   $ciphertext = \Defuse\Crypto\Crypto::encrypt($secret, $key);
+
+   echo 'secret: ' . $ciphertext . PHP_EOL;
+
+   ?>
+   ```
+
+1. Copy the `oauth2-server-php/find_cost.php` to the installation directory of Carepointe.
         
-            `docker exec -it arkos-docker_carepointe_1 bash`
-   
-   - Run `php find_cost.php`
-   - Update the `COST` variable in the `.env` to match the output of the `find_cost.php` script output (default is 11)
-        - this value will need to be updated in the carepointe .ini settings file as well (they must match)
+   > **Note: For carepointe-docker installations you will need to bash into the running container:**
+      
+   ```zsh
+   docker exec -it arkos-docker_carepointe_1 bash
+   ```
 
-####OAuth Server Complete Documentation
+   1. Run `php find_cost.php`
+   1. Update the `COST` variable in the `.env` to match the output of the `find_cost.php` script output (default is 11)
+      - this value will need to be updated in the carepointe .env file as well (they must match)
 
-[https://bshaffer.github.io/oauth2-server-php-docs/]()
+## Additional Information
+
+[OAuth Server Complete Documentation](https://bshaffer.github.io/oauth2-server-php-docs/) | More information on the oauth server.
