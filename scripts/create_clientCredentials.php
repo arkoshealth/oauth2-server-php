@@ -1,6 +1,6 @@
 <?php
 /* Execute example
- * php create-clientCredentials.php client_id="MyClient" client_secret="MySecret" public_key="-----BEGIN PUBLIC KEY-----..." private_key="-----BEGIN RSA PRIVATE KEY-----..."  redirect_uri="" scope="" user_id="" encryption_algorithm=""
+ * php scripts/create_clientCredentials.php client_id="MyClient" client_secret="MySecret" public_key="-----BEGIN PUBLIC KEY-----..." private_key="-----BEGIN RSA PRIVATE KEY-----..."  redirect_uri="" scope="" user_id="" encryption_algorithm=""
  */
 
 /*
@@ -30,7 +30,7 @@ foreach ($entry_params as $param) {
 if (count($data) !== count($required_params)) {
     echo "Error: \r\n";
     echo "Missing parameters: [client_id, client_secret, public_key, private_key] \r\n";
-    echo "Execute example: " . 'php scripts/create-clientCredentials.php client_id="MyClient" client_secret="MySecret" public_key="-----BEGIN PUBLIC KEY-----..." private_key="-----BEGIN RSA PRIVATE KEY-----..."';
+    echo "Execute example: " . 'php scripts/create_clientCredentials.php client_id="MyClient" client_secret="MySecret" public_key="-----BEGIN PUBLIC KEY-----..." private_key="-----BEGIN RSA PRIVATE KEY-----..."';
     die;
 }
 foreach ($entry_params as $param) {
@@ -46,10 +46,10 @@ $client_secret = $data['client_secret'];
 $public_key = $data['public_key'];
 $private_key = $data['private_key'];
 // Optional
-$redirect_uri = isset($data['redirect_uri']) ? $data['redirect_uri'] : 'https://carepointe.cloud/';
+$redirect_uri = isset($data['redirect_uri']) && $data['redirect_uri'] !== "" ? $data['redirect_uri'] : 'https://carepointe.cloud/';
 $scope = isset($data['scope']) ? $data['scope'] : '';
 $user_id = isset($data['user_id']) ? $data['user_id'] : '';
-$encryption_algorithm = isset($data['encryption_algorithm']) ? $data['encryption_algorithm'] : 'RS256';
+$encryption_algorithm = isset($data['encryption_algorithm']) && $data['encryption_algorithm'] !== "" ? $data['encryption_algorithm'] : 'RS256';
 
 // Route from scripts to root
 $homedir = $_SERVER["DOCUMENT_ROOT"] = __DIR__.'/../';
@@ -100,4 +100,3 @@ function getKey($keyFile) {
     list($export, $key) = explode('=', $exportKey);
     return trim($key);
 }
-?>

@@ -61,5 +61,5 @@ $server->addGrantType(new OAuth2\GrantType\RefreshToken($storage, array('always_
 // Add "Client Credentials" grant type
 $server->addGrantType(new OAuth2\GrantType\ClientCredentials($storage, array('allow_credentials_in_request_body' => false)));
 // Add scopes
-$server->setScopeUtil(new OAuth2\Scope(array('supported_scopes' => array('sign_off'))));
+$server->setScopeUtil(new OAuth2\Scope(array('supported_scopes' => array('sign_off','api'))));
 ?>
