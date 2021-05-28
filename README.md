@@ -5,15 +5,18 @@ Carepointe  OAuth Server Setup Pre-Requsites. Please follow the steps in the ord
 
 <br />
 
-## Table of Contents
+### Table of Contents
 | Step | Description |
 |---|---|
 |[Database Updates](#-Database-Updates)|Update the database|
 |[Virtual Host Updates](#-Virtual-Host-Updates)| VM Virtual host setup |
 |[Setup DNS](#-Setup-DNS)| Set up steps for DNS configurations |
-|[Configure .env File](#-Configure-.env-File)|Set up .env and update database values |
+|[Configure `.env` File](#-Configure-.env-File)|Set up .env and update database values |
+|[Create New Clients (Client Credentials)](#-Create-new-clients-(Client-Credentials))| Create new OAuth credentials for the project. |
 |[Additional Information](#-Additional-Information)| Link(s) to additional information |
 ---
+
+<br />
 
 ## Database Updates
 
@@ -58,7 +61,7 @@ Follow the below to set up DNS
    - run `cat /path/to/envvars >> /etc/apache2/envvars` after that envvars file is no longer needed
    - restart apache  
     
-## Configure .env File
+## Configure `.env` File
 
 > **Note: This is required for BOTH carepointe-docker and VM installations.**
 
@@ -95,6 +98,32 @@ Follow the below to set up DNS
    1. Run `php find_cost.php`
    1. Update the `COST` variable in the `.env` to match the output of the `find_cost.php` script output (default is 11)
       - this value will need to be updated in the carepointe .env file as well (they must match)
+
+## Create New Clients (Client Credentials)
+> **Note:** These instructions must be followed while inside the container of Oauth2-server-php project.
+ 1. Locate the root folder `/.../oauth2-server-php/`
+ 1. Run the script:
+      ```php
+      php scripts/create_clientCredentials.php client_id="MyClient" client_secret="MySecret" public_key="-----BEGIN PUBLIC KEY-----..." private_key="-----BEGIN RSA PRIVATE KEY-----..."
+      ```
+      > **Note:** Can add additional params:
+      ```
+      redirect_uri, scope, user_id, encryption_algorithm
+      ```
+      Should return: 
+      ```
+      MyClient created successfully
+      ```
+ 1. For testing, use the following cURL code:
+      ```
+      curl -u MyClient:MySecret http://oauth.local/token.php -d 'grant_type=client_credentials'
+      ```
+      The response should be:
+      ```
+      {"access_token":"JWT_TOKEN", "expires_in":false, "token_type":"bearer", "scope":null}
+      ```
+
+<br />
 
 ## Additional Information
 
