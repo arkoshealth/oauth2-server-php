@@ -68,7 +68,7 @@ Follow the below to set up DNS
 1. Locate the `oauth2-server-php/.env.example` file, copy to a new file named `.env`
 1. Update the database values accordingly
 
-   > **Note: Passwords and other secrets should be encrypted with php-encryption sample code:
+   > **Note:** Passwords and other secrets should be encrypted with php-encryption sample code:
 
    ```php
    <?php
@@ -95,16 +95,27 @@ Follow the below to set up DNS
    docker exec -it arkos-docker_carepointe_1 bash
    ```
 
-   1. Run `php find_cost.php`
-   1. Update the `COST` variable in the `.env` to match the output of the `find_cost.php` script output (default is 11)
-      - this value will need to be updated in the carepointe .env file as well (they must match)
+1. Run `php find_cost.php`
+1. Update the `COST` variable in the `.env` to match the output of the `find_cost.php` script output (default is 11)
+   > **Note:** This value will need to be updated in the carepointe .env file as well (they must match)
 
 ## Create New Clients (Client Credentials)
 > **Note:** These instructions must be followed while inside the container of Oauth2-server-php project.
- 1. Locate the root folder `/.../oauth2-server-php/`
+ 1. CD into the root folder `/var/www/html/`
+      ```zsh
+      cd /var/www/html/
+      ```
+ 1. Verify that the scripts folder is present
+      ```zsh
+      ls -als
+      ```
  1. Run the script:
       ```php
-      php scripts/create_clientCredentials.php client_id="MyClient" client_secret="MySecret" public_key="-----BEGIN PUBLIC KEY-----..." private_key="-----BEGIN RSA PRIVATE KEY-----..."
+      php scripts/create_clientCredentials.php client_id="MyClient" client_secret="MySecret" public_key="-----BEGIN PUBLIC KEY-----
+      [Place your public RSA token here]
+      -----END PUBLIC KEY-----" private_key="-----BEGIN RSA PRIVATE KEY-----
+      [place your private RSA token here]
+      -----END RSA PRIVATE KEY-----"
       ```
       > **Note:** Can add additional params:
       ```
