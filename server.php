@@ -7,7 +7,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-$key = \Defuse\Crypto\Key::loadFromAsciiSafeString(getenv(getenv('KEY_NAME')));
+// $key = \Defuse\Crypto\Key::loadFromAsciiSafeString(getenv(getenv('KEY_NAME')));
+$keyContents = getKey(getenv('ADDL_SETTINGS_PATH') . '/addl-settings');
+$key = \Defuse\Crypto\Key::loadFromAsciiSafeString($keyContents);
 
 $dbHost = getenv('DB_HOST');
 $dbName = getenv('DB_NAME');
@@ -58,4 +60,16 @@ $server = new OAuth2\Server($storage, array(
 $server->addGrantType(new OAuth2\GrantType\UserCredentials($storage));
 // Add the "Refresh Token" grant type. This allows us to issue a new access token using the Refresh token.
 $server->addGrantType(new OAuth2\GrantType\RefreshToken($storage, array('always_issue_new_refresh_token' => true)));
+
+/**
+  * @abstract - Function to get the key from a file with the key in an export statement
+  * @param string $keyFile - filename and path of the file with the key
+  * @return string $key - retrieved key
+  */
+  function getKey($keyFile) {
+    $exportKey = file_get_contents($keyFile);
+    list($export, $key) = explode('=', $exportKey);
+    return trim($key);
+}
+
 ?>
