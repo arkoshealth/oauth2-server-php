@@ -3,11 +3,15 @@
 ini_set('display_errors',1);
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 
+date_default_timezone_set('UTC');
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-$key = \Defuse\Crypto\Key::loadFromAsciiSafeString(getenv(getenv('KEY_NAME')));
+$keyContents = getKey(getenv('ADDL_SETTINGS_PATH') . '/addl-settings');
+$key = \Defuse\Crypto\Key::loadFromAsciiSafeString($keyContents);
+// $key = \Defuse\Crypto\Key::loadFromAsciiSafeString(getenv(getenv('KEY_NAME')));
 
 $dbHost = getenv('DB_HOST');
 $dbName = getenv('DB_NAME');
@@ -17,13 +21,16 @@ $password = \Defuse\Crypto\Crypto::decrypt(getenv('DB_PASSWORD'), $key);
 $accessLifetime = getenv('ACCESS_LIFETIME');
 $idLifetime = getenv('ID_LIFETIME');
 $refreshLifetime = getenv('REFRESH_LIFETIME');
+$ca_bundle = getenv('CA_BUNDLE');
+
+$mysql_default_options = [ PDO::MYSQL_ATTR_SSL_CA => getenv('CA_BUNDLE'), ];
 
 // Autoloading (composer is preferred, but for this example let's just do this)
 require_once('src/OAuth2/Autoloader.php');
 OAuth2\Autoloader::register();
 
 // $dsn is the Data Source Name for your database, for exmaple "mysql:dbname=my_oauth2_db;host=localhost"
-$storage = new OAuth2\Storage\Pdo(array('dsn' => $dsn, 'username' => $username, 'password' => $password));
+$storage = new OAuth2\Storage\Pdo(array('dsn' => $dsn, 'username' => $username, 'password' => $password, 'options'=>$mysql_default_options));
 
 // Pass a storage object or array of storage objects to the OAuth2 server class
 /**
@@ -62,4 +69,16 @@ $server->addGrantType(new OAuth2\GrantType\RefreshToken($storage, array('always_
 $server->addGrantType(new OAuth2\GrantType\ClientCredentials($storage, array('allow_credentials_in_request_body' => false)));
 // Add scopes
 $server->setScopeUtil(new OAuth2\Scope(array('supported_scopes' => array('sign_off','api'))));
+
+/**
+  * @abstract - Function to get the key from a file with the key in an export statement
+  * @param string $keyFile - filename and path of the file with the key
+  * @return string $key - retrieved key
+  */
+  function getKey($keyFile) {
+    $exportKey = file_get_contents($keyFile);
+    list($export, $key) = explode('=', $exportKey);
+    return trim($key);
+  }
+
 ?>
